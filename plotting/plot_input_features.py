@@ -364,7 +364,7 @@ if __name__=="__main__":
       proc_dict[bkg_proc] = -9999
 
   print(">> Loading dataframes")  
-  
+  print("inputs {}".format(args.input))
   columns = common.getColumns(args.input)
   columns_to_exclude = ["year", "event", "MX", "MY"]
   columns = list(filter(lambda x: ("weight" not in x) and (x not in columns_to_exclude), columns)) + [args.weight]

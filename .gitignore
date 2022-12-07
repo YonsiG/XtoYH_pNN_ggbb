@@ -137,3 +137,4 @@ dmypy.json
 *.model
 batch/
 *.pdf
+Outputs/
