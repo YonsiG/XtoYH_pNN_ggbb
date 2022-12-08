@@ -1,5 +1,5 @@
 # Resonant pNN  
-XtoYH pNN framework  
+XtoYH pNN framework, forked from https://github.com/MatthewDKnight/ResonantGGTT. Credits to Matthew Knight (@MatthewDKnight).
   
 ## Instructions  
 **1. Clone this repository**  
