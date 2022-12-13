@@ -14,12 +14,18 @@ Then activate the environment and setup the python modules with
 source setup.sh 
 ```
 **3. Add extra features and mass lables**  
-  
+
+The starting point of this exercise are the parquet file Sam produced for the resonant ggTauTau analysis. For example for XtoY(gg)H(TauTau) one can start from:
+```
+/ceph/cms/store/user/smay/HiggsDNA/hh_ggtautau_resonant_presel_XYH_Ygg_HTauTau_19Jul2022/merged_nominal.parquet
+```  
+This will be updated when the pNN will be converted to run on XtoY(gg)H(bb) inputs. 
+
 Run input preprocessing
 ```  
 python processInputs/process_HiggsDNA_Inputs.py -i <inputParquetfile> -o <outputParquetfile> -s <path/summary.json> -f important_17_corr_no_mggtau 
 ```  
-The -f options select the list of input features that need to be added and will be considered in the pNN training.
+Typically the ```summary.json``` file lives in the same path as the HiggsDNA output. The -f options select the list of input features that need to be added and will be considered in the pNN training.
 
 **4. Plot input features**
 Not necessary, but you might want to take a look at how signals and background look like
