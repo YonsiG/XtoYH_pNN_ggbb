@@ -30,7 +30,7 @@ Typically the ```summary.json``` file lives in the same path as the HiggsDNA out
 ### 4. Plot input features
 Not necessary, but you might want to take a look at how signals and background look like
 ```
-python plotting/plot_input_features.py -i <InputParquet> -s <path/summary.json> -p <spave separated list of signals> -o <Output_dir> --norm (--no-legend)
+python plotting/plot_input_features.py -i <InputParquet> -s <path/summary.json> -p <space-separated list of signals> -o <Output_dir> --norm (--no-legend)
 ```
 
 ### 5. Training the pNN
