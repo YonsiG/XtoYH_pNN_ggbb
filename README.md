@@ -2,9 +2,9 @@
 XtoYH pNN framework, forked from https://github.com/MatthewDKnight/ResonantGGTT. Credits to Matthew Knight (@MatthewDKnight).
   
 ## Instructions  
-**1. Clone this repository**  
+###1. Clone this repository  
 
-**2. Install dependencies**  
+###2. Install dependencies  
     
 ```  
 source make_env.sh 
@@ -13,7 +13,7 @@ Then activate the environment and setup the python modules with
 ```
 source setup.sh 
 ```
-**3. Add extra features and mass lables**  
+###3. Add extra features and mass lables  
 
 The starting point of this exercise are the parquet file Sam produced for the resonant ggTauTau analysis. For example for XtoY(gg)H(TauTau) one can start from:
 ```
@@ -21,19 +21,19 @@ The starting point of this exercise are the parquet file Sam produced for the re
 ```  
 This will be updated when the pNN will be converted to run on XtoY(gg)H(bb) inputs. 
 
-Run input preprocessing
+**Run input preprocessing**
 ```  
 python processInputs/process_HiggsDNA_Inputs.py -i <inputParquetfile> -o <outputParquetfile> -s <path/summary.json> -f important_17_corr_no_mggtau 
 ```  
 Typically the ```summary.json``` file lives in the same path as the HiggsDNA output. The -f options select the list of input features that need to be added and will be considered in the pNN training.
 
-**4. Plot input features**
+###4. Plot input features
 Not necessary, but you might want to take a look at how signals and background look like
 ```
 python plotting/plot_input_features.py -i <InputParquet> -s <path/summary.json> -p <spave separated list of signals> -o <Output_dir> --norm (--no-legend)
 ```
 
-**5. Training the pNN**
+###5. Training the pNN
 ```
 python training/train_model.py -i <InputParquet> -s <path/summary.json> -o <Output_dir> -p <proc_lists> --train-features important_17_corr_no_mggtau --model ParamNN --outputOnlyTest --remove-gjets --hyperparams hp/<analysisSpecificHP>.json --outputName merged_nominal.parquet --outputModel <Output_dir>/model.pkl
 ```
