@@ -153,7 +153,10 @@ def deriveModels(original_df, proc_dict, optim_results, original_outdir, make_pl
       if (masses_to_do != None) and ([MX, MY] not in masses_to_do): continue
       #if not (np.isin(MX, [300,400]) & (np.isin(MY, [80,90,100]))): continue
       #if MY != 90: continue
+      print()
+      print("MX, MY")
       print(MX, MY)
+      print()
 
       closest_mx = nominal_mxs[gridx[np.argmin(abs(gridx-argx(MX)))]]
       closest_my = nominal_mys[gridy[np.argmin(abs(gridy-argy(MY)))]]
@@ -167,7 +170,7 @@ def deriveModels(original_df, proc_dict, optim_results, original_outdir, make_pl
 
       to_fit_masses = [[mx, my] for mx in to_fit_mxs for my in to_fit_mys if (mx, my) in all_masses] #convenient to leave as list for tagSignals
       df_tagged = tagSignals(df_year, entry, proc_dict, to_fit_masses)
-      print(df_tagged)
+      #print(df_tagged)
       to_fit_masses = np.array(to_fit_masses)
 
       #for interpolation at combine level in MH (MY)
@@ -178,9 +181,10 @@ def deriveModels(original_df, proc_dict, optim_results, original_outdir, make_pl
         df_tagged_same_score = tagSignals(df_year, entry, proc_dict, to_fit_masses_same_score, use_same_score=True)
         to_fit_masses_same_score = np.array(to_fit_masses_same_score)
 
+      print("Closest MX, Closest MY")
       for SR in range(len(entry["category_boundaries"])-1):
       #for SR in [0]:
-        print(SR)
+        #print(SR)
         df = df_tagged[df_tagged.SR==SR]
         if do_same_score_interp: df_same_score = df_tagged_same_score[df_tagged_same_score.SR==SR]
 
@@ -189,8 +193,8 @@ def deriveModels(original_df, proc_dict, optim_results, original_outdir, make_pl
         models[str(year)][str(SR)]["%d_%d"%(MX, MY)] = {}
 
         #set tiny norms to zero
-        print(df.MX)
-        print(df.MY)
+        #print(df.MX)
+        #print(df.MY)
         print(closest_mx, closest_my)
         norm_closest = df.loc[(df.MX==closest_mx)&(df.MY==closest_my), "weight"].sum()/common.lumi_table[year]
         if norm_closest < 0.001:
@@ -369,7 +373,7 @@ def main(args):
   with open(args.optim_results) as f:
      optim_results = json.load(f)
   
-  #deriveModels(df, proc_dict, optim_results, args.outdir, args.make_plots, args.same_score_interp, args.fit_range_my)
+  deriveModels(df, proc_dict, optim_results, args.outdir, args.make_plots, args.same_score_interp, args.fit_range_my)
   if args.interp_checks:
     checkInterpolation(df, proc_dict, optim_results, args.outdir, args.make_plots, args.same_score_interp, args.fit_range_my)
 

@@ -24,6 +24,7 @@ pip install pandas
 pip install pyarrow
 pip install scikit-learn
 pip install scipy
+pip install tabulate
 pip install tensorboard
 pip install torch
 pip install torchviz
