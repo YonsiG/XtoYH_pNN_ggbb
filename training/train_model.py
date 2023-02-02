@@ -39,7 +39,7 @@ import pickle
 from scipy.interpolate import interp1d
 
 def loadDataFrame(args, train_features):
-  columns_to_load = ["Diphoton_mass", "weight_central", "process_id", "category", "event", "year"] + train_features
+  columns_to_load = ["Diphoton_mass", "weight_central", "process_id", "event", "year"] + train_features
   if not args.parquetSystematic: columns_to_load += common.weights_systematics
   columns_to_load = set(columns_to_load)
 
@@ -59,6 +59,7 @@ def loadDataFrame(args, train_features):
   needed_ids = sig_ids+bkg_ids+data_ids
   
   reversed_proc_dict = {proc_dict[key]:key for key in proc_dict.keys()}
+
   for i in df.process_id.unique():
     if i in needed_ids: print("> %s"%(reversed_proc_dict[i]).ljust(40), "kept")
     else: print("> %s"%(reversed_proc_dict[i]).ljust(40), "removed")
@@ -349,7 +350,7 @@ def evaluatePlotAndSave(args, proc_dict, model, train_features, train_df, test_d
       output_sig = output_df[output_df.process_id == proc_dict[sig_proc]]
       with np.errstate(divide='ignore', invalid='ignore'): plotOutputScore(output_data, output_sig, output_bkg_MC, proc_dict, sig_proc, os.path.join(args.outdir, sig_proc))
 
-  columns_to_keep = ["Diphoton_mass", "weight", "process_id", "category", "event", "year", "y"]
+  columns_to_keep = ["Diphoton_mass", "weight", "process_id", "event", "year", "y"]
   if not args.parquetSystematic: columns_to_keep += common.weights_systematics
   for column in output_df:
     if "score" in column: columns_to_keep.append(column)

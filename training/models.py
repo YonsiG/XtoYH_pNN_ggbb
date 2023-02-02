@@ -91,7 +91,7 @@ class ParamModel(Model):
     for combination in unique_combinations:
       signal_proc_selection = (X[:,-self.n_params:] == combination).all(axis=1) & y==1
       w[signal_proc_selection] *= norm / w[signal_proc_selection].sum() #norm to sumw = 1
-    assert np.isclose(w[y==1].sum(), norm*self.n_sig_procs), print("Equalisation amongst signal processes failed. \nn_sig_procs = %d \nsig_sum_w = %f"%(self.n_sig_procs, w[y==1].sum()))
+    assert np.isclose(w[y==1].sum(), norm*self.n_sig_procs), print("Equalisation amongst signal processes failed. \nn_sig_procs = %d \n n_sig_procs x norm %d \nsig_sum_w = %f"%(self.n_sig_procs,self.n_sig_procs*norm, w[y==1].sum()))
 
     return Model.equaliseWeights(self, X, y, w)
 

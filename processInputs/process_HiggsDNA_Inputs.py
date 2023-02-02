@@ -10,49 +10,51 @@ dphi = lambda x, y: abs(x-y) - 2*(abs(x-y) - np.pi) * (abs(x-y) // np.pi)
 
 def add_Deltas(df):
   df["Diphoton_deta"] = df.LeadPhoton_eta-df.SubleadPhoton_eta
+  df["Diphoton_dPhi"] = dphi(df.LeadPhoton_phi,df.SubleadPhoton_phi)
   df["Diphoton_dR"] = np.sqrt( dphi(df.LeadPhoton_phi, df.SubleadPhoton_phi)**2 + (df.LeadPhoton_eta-df.SubleadPhoton_eta)**2 )
 
-  df["ditau_deta"] = df.lead_lepton_eta - df.sublead_lepton_eta
-  df.loc[df.category==8, "ditau_deta"] = common.dummy_val
-  df.loc[df.category==8, "ditau_dphi"] = common.dummy_val
+  df["dijet_deta"] = df.dijet_lead_eta - df.dijet_sublead_eta
+  df["dijet_dphi"] = dphi(df.dijet_lead_phi,df.dijet_sublead_phi)
+#   df.loc[df.category==8, "dijet_deta"] = common.dummy_val
+#   df.loc[df.category==8, "dijet_dphi"] = common.dummy_val
 
-  df["Diphoton_lead_lepton_deta"] = df.Diphoton_eta-df.lead_lepton_eta
-  df["Diphoton_lead_lepton_dphi"] = dphi(df.Diphoton_phi,df.lead_lepton_phi)
-  df["Diphoton_lead_lepton_dR"] = np.sqrt( dphi(df.Diphoton_phi,df.lead_lepton_phi)**2 + (df.Diphoton_eta-df.lead_lepton_eta)**2 )
+  df["Diphoton_dijet_lead_deta"] = df.Diphoton_eta-df.dijet_lead_eta
+  df["Diphoton_dijet_lead_dphi"] = dphi(df.Diphoton_phi,df.dijet_lead_phi)
+  df["Diphoton_dijet_lead_dR"] = np.sqrt( dphi(df.Diphoton_phi,df.dijet_lead_phi)**2 + (df.Diphoton_eta-df.dijet_lead_eta)**2 )
 
-  df["Diphoton_sublead_lepton_deta"] = df.Diphoton_eta-df.sublead_lepton_eta
-  df["Diphoton_sublead_lepton_dphi"] = dphi(df.Diphoton_phi,df.sublead_lepton_phi)
-  df["Diphoton_sublead_lepton_dR"] = np.sqrt( dphi(df.Diphoton_phi,df.sublead_lepton_phi)**2 + (df.Diphoton_eta-df.sublead_lepton_eta)**2 )
-  df.loc[df.category==8, "Diphoton_sublead_lepton_deta"] = common.dummy_val
-  df.loc[df.category==8, "Diphoton_sublead_lepton_dphi"] = common.dummy_val
-  df.loc[df.category==8, "Diphoton_sublead_lepton_dR"] = common.dummy_val
+  df["Diphoton_dijet_sublead_deta"] = df.Diphoton_eta-df.dijet_sublead_eta
+  df["Diphoton_dijet_sublead_dphi"] = dphi(df.Diphoton_phi,df.dijet_sublead_phi)
+  df["Diphoton_dijet_sublead_dR"] = np.sqrt( dphi(df.Diphoton_phi,df.dijet_sublead_phi)**2 + (df.Diphoton_eta-df.dijet_sublead_eta)**2 )
+#   df.loc[df.category==8, "Diphoton_dijet_sublead_deta"] = common.dummy_val
+#   df.loc[df.category==8, "Diphoton_dijet_sublead_dphi"] = common.dummy_val
+#   df.loc[df.category==8, "Diphoton_dijet_sublead_dR"] = common.dummy_val
 
-  df["Diphoton_ditau_deta"] = df.Diphoton_eta-df.ditau_eta
-  df["Diphoton_ditau_dphi"] = dphi(df.Diphoton_phi,df.ditau_phi)
-  df["Diphoton_ditau_dR"] = np.sqrt( dphi(df.Diphoton_phi,df.ditau_phi)**2 + (df.Diphoton_eta-df.ditau_eta)**2 )
-  df.loc[df.category==8, "Diphoton_ditau_deta"] = common.dummy_val
-  df.loc[df.category==8, "Diphoton_ditau_dphi"] = common.dummy_val
-  df.loc[df.category==8, "Diphoton_ditau_dR"] = common.dummy_val
+  df["Diphoton_dijet_deta"] = df.Diphoton_eta-df.dijet_eta
+  df["Diphoton_dijet_dphi"] = dphi(df.Diphoton_phi,df.dijet_phi)
+  df["Diphoton_dijet_dR"] = np.sqrt( dphi(df.Diphoton_phi,df.dijet_phi)**2 + (df.Diphoton_eta-df.dijet_eta)**2 )
+#   df.loc[df.category==8, "Diphoton_dijet_deta"] = common.dummy_val
+#   df.loc[df.category==8, "Diphoton_dijet_dphi"] = common.dummy_val
+#   df.loc[df.category==8, "Diphoton_dijet_dR"] = common.dummy_val
 
   #zgamma variables
-  df["LeadPhoton_ditau_dR"] = np.sqrt( dphi(df.LeadPhoton_phi,df.ditau_phi)**2 + (df.LeadPhoton_eta-df.ditau_eta)**2 )
-  df["SubleadPhoton_ditau_dR"] = np.sqrt( dphi(df.SubleadPhoton_phi,df.ditau_phi)**2 + (df.SubleadPhoton_eta-df.ditau_eta)**2 )
-  df["LeadPhoton_lead_lepton_dR"] = np.sqrt( dphi(df.LeadPhoton_phi,df.lead_lepton_phi)**2 + (df.LeadPhoton_eta-df.lead_lepton_eta)**2 )
-  df["SubleadPhoton_lead_lepton_dR"] = np.sqrt( dphi(df.SubleadPhoton_phi,df.lead_lepton_phi)**2 + (df.SubleadPhoton_eta-df.lead_lepton_eta)**2 )
-  df["LeadPhoton_sublead_lepton_dR"] = np.sqrt( dphi(df.LeadPhoton_phi,df.sublead_lepton_phi)**2 + (df.LeadPhoton_eta-df.sublead_lepton_eta)**2 )
-  df["SubleadPhoton_sublead_lepton_dR"] = np.sqrt( dphi(df.SubleadPhoton_phi,df.sublead_lepton_phi)**2 + (df.SubleadPhoton_eta-df.sublead_lepton_eta)**2 )
-  df.loc[df.category==8, "LeadPhoton_ditau_dR"] = common.dummy_val
-  df.loc[df.category==8, "SubleadPhoton_ditau_dR"] = common.dummy_val
-  df.loc[df.category==8, "LeadPhoton_sublead_lepton_dR"] = common.dummy_val
-  df.loc[df.category==8, "SubleadPhoton_sublead_lepton_dR"] = common.dummy_val
+  df["LeadPhoton_dijet_dR"] = np.sqrt( dphi(df.LeadPhoton_phi,df.dijet_phi)**2 + (df.LeadPhoton_eta-df.dijet_eta)**2 )
+  df["SubleadPhoton_dijet_dR"] = np.sqrt( dphi(df.SubleadPhoton_phi,df.dijet_phi)**2 + (df.SubleadPhoton_eta-df.dijet_eta)**2 )
+  df["LeadPhoton_dijet_lead_dR"] = np.sqrt( dphi(df.LeadPhoton_phi,df.dijet_lead_phi)**2 + (df.LeadPhoton_eta-df.dijet_lead_eta)**2 )
+  df["SubleadPhoton_dijet_lead_dR"] = np.sqrt( dphi(df.SubleadPhoton_phi,df.dijet_lead_phi)**2 + (df.SubleadPhoton_eta-df.dijet_lead_eta)**2 )
+  df["LeadPhoton_dijet_sublead_dR"] = np.sqrt( dphi(df.LeadPhoton_phi,df.dijet_sublead_phi)**2 + (df.LeadPhoton_eta-df.dijet_sublead_eta)**2 )
+  df["SubleadPhoton_dijet_sublead_dR"] = np.sqrt( dphi(df.SubleadPhoton_phi,df.dijet_sublead_phi)**2 + (df.SubleadPhoton_eta-df.dijet_sublead_eta)**2 )
+#   df.loc[df.category==8, "LeadPhoton_dijet_dR"] = common.dummy_val
+#   df.loc[df.category==8, "SubleadPhoton_dijet_dR"] = common.dummy_val
+#   df.loc[df.category==8, "LeadPhoton_dijet_sublead_dR"] = common.dummy_val
+#   df.loc[df.category==8, "SubleadPhoton_dijet_sublead_dR"] = common.dummy_val
 
 def add_MET_variables(df):
-  # met_dphi variables already exist for diphoton and lead_lepton
-  df["ditau_met_dPhi"] = dphi(df.MET_phi, df.ditau_phi)
-  df.loc[df.category==8, "ditau_met_dPhi"] = common.dummy_val
+  # met_dphi variables already exist for diphoton and dijet_lead
+  df["dijet_met_dPhi"] = dphi(df.MET_phi, df.dijet_phi)
+#   df.loc[df.category==8, "dijet_met_dPhi"] = common.dummy_val
 
-  df["sublead_lepton_met_dPhi"] = dphi(df.MET_phi, df.sublead_lepton_phi)
-  df.loc[df.category==8, "sublead_lepton_met_dPhi"] = common.dummy_val
+  df["dijet_sublead_met_dPhi"] = dphi(df.MET_phi, df.dijet_sublead_phi)
+#   df.loc[df.category==8, "dijet_sublead_met_dPhi"] = common.dummy_val
 
 def applyPixelVeto(df):
   pixel_veto = (df.LeadPhoton_pixelSeed==0) & (df.SubleadPhoton_pixelSeed==0)
@@ -60,7 +62,8 @@ def applyPixelVeto(df):
   return df[pixel_veto]
 
 def apply90WPID(df):
-  selection = (df.Diphoton_max_mvaID > -0.26) & (df.Diphoton_min_mvaID > -0.26)
+#   selection = (df.Diphoton_max_mvaID > -0.26) & (df.Diphoton_min_mvaID > -0.26) #FIXME ggbb DF have no max/min mvaID!
+  selection = (df.LeadPhoton_mvaID > -0.26) & (df.SubleadPhoton_mvaID > -0.26)
   #df.drop(df[~selection].index, inplace=True)
   return df[selection]
 
@@ -78,12 +81,12 @@ def reduceMemory(df):
   print(df.info())
 
 def fixDtypes(df):
-  df.loc[:, "lead_lepton_id"] = df["lead_lepton_id"].astype("int8")
-  df.loc[:, "sublead_lepton_id"] = df["sublead_lepton_id"].astype("int8")
-  df.loc[:, "lead_lepton_charge"] = df["lead_lepton_charge"].astype("int8")
-  df.loc[:, "sublead_lepton_charge"] = df["sublead_lepton_charge"].astype("int8")
+#   df.loc[:, "lead_lepton_id"] = df["lead_lepton_id"].astype("int8")
+#   df.loc[:, "sublead_lepton_id"] = df["sublead_lepton_id"].astype("int8")
+#   df.loc[:, "lead_lepton_charge"] = df["lead_lepton_charge"].astype("int8")
+#   df.loc[:, "sublead_lepton_charge"] = df["sublead_lepton_charge"].astype("int8")
   
-  df.loc[:, "process_id"] = df["process_id"].astype("uint8")
+  df.loc[:, "process_id"] = df["process_id"].astype("uint16") #new IDs are large!
   df.loc[:, "year"] = df["year"].astype("uint16")
 
   df.loc[:, "LeadPhoton_pixelSeed"] = df["LeadPhoton_pixelSeed"].astype("uint8")
@@ -111,16 +114,16 @@ def merge2016(df):
   df.loc[df.year==b"2016UL_pre", "year"] = "2016"
   df.loc[df.year==b"2016UL_pos", "year"] = "2016"
 
-def add_ditau_phi(df):
-  tau1_px = df.lead_lepton_pt * np.cos(df.lead_lepton_phi)
-  tau1_py = df.lead_lepton_pt * np.sin(df.lead_lepton_phi)
-  tau2_px = df.sublead_lepton_pt * np.cos(df.sublead_lepton_phi)
-  tau2_py = df.sublead_lepton_pt * np.sin(df.sublead_lepton_phi)
+def add_dijet_phi(df):
+  bjet1_px = df.dijet_lead_pt * np.cos(df.dijet_lead_phi)
+  bjet1_py = df.dijet_lead_pt * np.sin(df.dijet_lead_phi)
+  bjet2_px = df.dijet_sublead_pt * np.cos(df.dijet_sublead_phi)
+  bjet2_py = df.dijet_sublead_pt * np.sin(df.dijet_sublead_phi)
 
-  ditau_px = tau1_px + tau2_px
-  ditau_py = tau1_py + tau2_py
-  df["ditau_phi"] = np.arctan2(ditau_py, ditau_px)
-  df.loc[df.category==8, "ditau_phi"] = common.dummy_val
+  dijet_px = bjet1_px + bjet2_px
+  dijet_py = bjet1_py + bjet2_py
+  df["dijet_phi"] = np.arctan2(dijet_py, dijet_px)
+#   df.loc[df.category==8, "dijet_phi"] = common.dummy_val
 
 def dividePhotonPT(df):
   df["LeadPhoton_pt_mgg"] = df["LeadPhoton_pt"] / df["Diphoton_mass"]
@@ -154,7 +157,10 @@ def main(parquet_input, parquet_output, summary_input, do_test, keep_features, s
 
   if sig_procs != None:
     df = selectSigProcs(df, proc_dict, sig_procs)
-
+   
+  print(0)
+  reduceMemory(df)
+  
   print(1)
   df = applyPixelVeto(df)
   df = apply90WPID(df)
@@ -165,44 +171,44 @@ def main(parquet_input, parquet_output, summary_input, do_test, keep_features, s
   checkNans(df)
   print(2.3)
   checkInfs(df)
-
+  print(3)
   common.add_MX_MY(df, proc_dict)
 
-  print(3)
-  add_ditau_phi(df)
   print(4)
-  add_MET_variables(df)
+  add_dijet_phi(df)
   print(5)
-  add_Deltas(df)
+#   add_MET_variables(df)
   print(6)
-  dividePhotonPT(df)
+  add_Deltas(df)
   print(7)
+  dividePhotonPT(df)
+  print(8)
   mass_variables.add_reco_MX(df)  
-  mass_variables.add_reco_MX_met4(df)
-  mass_variables.add_Mggt(df)
-  mass_variables.add_Mggt_met1(df)
+#   mass_variables.add_reco_MX_met4(df)
+  mass_variables.add_Mggb(df)
+#   mass_variables.add_Mggb_met1(df)
   #add_helicity_angles(df)
   #divide_pt_by_mgg(df)
-  print(8)
-  merge2016(df)
   print(9)
+  merge2016(df)
+  print(10)
 
   print("Additional columns:")
   print(set(df.columns).difference(original_columns))
-
-  print(10)
+  print(11)
   fixDtypes(df)
 
   if keep_features != None:
+    print (" k1 ",keep_features)
     keep_features = common.train_features[keep_features]
+    print (" k2 ",keep_features)
     keep_features += list(filter(lambda x: "reco_" in x, df.columns)) #reco mass vars
     keep_features += list(filter(lambda x: "weight" in x, df.columns)) #add weights
-    keep_features += ["Diphoton_mass", "MX", "MY", "event", "year", "category", "process_id"] #add other neccessary columns
+    print (" k3 ",keep_features)
+    keep_features += ["Diphoton_mass", "MX", "MY", "event", "year", "process_id"] #add other neccessary columns
     keep_features = list(set(keep_features)) #remove overlap in columns
+    print (" k4 ",keep_features)
     df = df[keep_features]
-
-  print(11)
-  reduceMemory(df)
 
   print("Final columns:")
   print(df.columns)
