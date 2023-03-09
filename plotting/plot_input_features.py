@@ -39,6 +39,7 @@ colour_schemes = {
 
 def createDefaultConfig(data, bkg, sig):
   config = OrderedDict()
+  print("data columns {}".format(data.columns))
   columns_to_plot = filter(lambda x: ("weight" not in x), data.columns)
   for column in columns_to_plot:
     d = data[column][data[column]!=common.dummy_val]

@@ -134,6 +134,9 @@ def prefiringWeights(df):
   df.loc[:, "weight_L1_prefiring_sf_up"] = 1.0
   df.loc[:, "weight_L1_prefiring_sf_down"] = 1.0
 
+def rescale2018lowMassMC(df):
+  df.loc[df["process_id"]!= 0, "weight_central"] = df['weight_central']*common.LumiFactor
+
 def selectSigProcs(df, proc_dict, sig_procs):
   data_bkg_ids = [proc_dict[proc] for proc in common.bkg_procs["all"]+["Data"]]
   sig_proc_ids = [proc_dict[proc] for proc in sig_procs]
@@ -175,7 +178,10 @@ def main(parquet_input, parquet_output, summary_input, do_test, keep_features, s
   common.add_MX_MY(df, proc_dict)
 
   print(4)
-  add_dijet_phi(df)
+#   add_dijet_phi(df)
+  if common.LOW_MASS_MODE :
+    print ("rescaling MC")
+    rescale2018lowMassMC(df)
   print(5)
 #   add_MET_variables(df)
   print(6)

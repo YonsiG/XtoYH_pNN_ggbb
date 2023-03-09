@@ -33,6 +33,7 @@ def add_reco_MX(df):
 
   df["reco_MX"] = np.sqrt(HH_E**2 - HH_px**2 - HH_py**2 - HH_pz**2)
   df["reco_MX_mgg"] = df["reco_MX"] / df["Diphoton_mass"]
+  df["xcand_mass_mgg"] = df["xcand_mass"] / df["Diphoton_mass"]
 #   df.loc[df.category == 8, "reco_MX"] = common.dummy_val
 #   df.loc[df.category == 8, "reco_MX_mgg"] = common.dummy_val
 

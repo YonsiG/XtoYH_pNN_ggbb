@@ -188,8 +188,11 @@ def failedBkgFit(bkg, res, pres):
 
 def fitBkg(bkg, pres, sr, l_guess, counting_sr=None):
   if counting_sr == None: counting_sr = sr
+#   print ("before :",pres[0], " - ",sr[0] , " ", sr[1], " - ", pres[1])
   if pres[0] > sr[0]: sr[0] = pres[0]
   if pres[1] < sr[1]: sr[1] = pres[1]
+#   if sr[0] > sr[1]: 
+#   print ("after :",pres[0], " - ",sr[0] , " ", sr[1], " - ", pres[1])
   assert sr[1]-sr[0] > 0
 
   norm = lambda l: (intExp(pres[0], sr[0], l) + intExp(sr[1], pres[1], l))

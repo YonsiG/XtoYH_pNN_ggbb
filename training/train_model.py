@@ -378,7 +378,7 @@ def main(args):
     df["random"] = np.random.random(size=len(df))
 
   #shuffle bkg masses
-  if "Param" in args.model:
+  if "Param" in args.model and not args.loadModel:
     s = (df.y==0)&(df.process_id!=proc_dict["Data"])
     df.loc[s, "MX"] = np.random.choice(np.unique(df.loc[df.y==1, "MX"]), size=sum(s))
     df.loc[s, "MY"] = np.random.choice(np.unique(df.loc[df.y==1, "MY"]), size=sum(s))
