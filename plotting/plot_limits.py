@@ -244,7 +244,7 @@ def plotLimits2D(masses, limits, ylabel, savename):
   plt.ylabel(r"$m_Y$")
 
   plt.text(0.05, 0.9, r"$Y\rightarrow\tau\tau$", transform=plt.gca().transAxes, fontsize=32)
-  #plt.text(0.05, 0.9, r"$Y\rightarrow\gamma\gamma$", transform=plt.gca().transAxes, fontsize=32)
+  plt.text(0.05, 0.9, r"$Y\rightarrow\gamma\gamma$", transform=plt.gca().transAxes, fontsize=32)
 
   mplhep.cms.label(llabel="Work in Progress", data=True, lumi=common.tot_lumi, loc=0)
 
@@ -417,10 +417,12 @@ if len(np.unique(masses[:,1])) == 1: #if 1D (graviton or radion)
   plotResBkgComparison2(mx, limits, limits_no_res_bkg, ylabel, nominal_masses, os.path.join(sys.argv[2], "Limits_res_bkg_comparison", "125_2"))
 
 else:
-  nominal_mx = [300,400,500,600,700,800,900,1000]
-  nominal_my = [70,80,90,100,125]
+  #nominal_mx = [300,400,500,600,700,800,900,1000]
+  #nominal_my = [70,80,90,100,125]
   #nominal_my = [70,80,90,100,125,150,200,250,300,400,500,600,700,800]
   #nominal_my = [125,150,200,250,300,400,500,600,700,800]
+  nominal_mx = [240,280,300,320,360,400,450,500,550,600,650,700,750,800,850,900,950,1000]
+  nominal_my = [70,80,90,100,125,150,170,190,250,300,350,400,450,500,550,600,650,700,800]
 
   #only grab the nominal points
   # s = np.isin(masses[:,0], nominal_mx) & np.isin(masses[:,1], nominal_my)

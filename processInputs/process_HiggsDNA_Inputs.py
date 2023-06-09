@@ -178,11 +178,11 @@ def main(parquet_input, parquet_output, summary_input, do_test, keep_features, s
   common.add_MX_MY(df, proc_dict)
 
   print(4)
-#   add_dijet_phi(df)
-  if common.LOW_MASS_MODE :
-    print ("rescaling MC")
-    rescale2018lowMassMC(df)
-  print(5)
+# #   add_dijet_phi(df)
+#   if common.LOW_MASS_MODE :
+#     print ("rescaling MC")
+#     rescale2018lowMassMC(df)
+#   print(5)
 #   add_MET_variables(df)
   print(6)
   add_Deltas(df)
@@ -192,6 +192,7 @@ def main(parquet_input, parquet_output, summary_input, do_test, keep_features, s
   mass_variables.add_reco_MX(df)  
 #   mass_variables.add_reco_MX_met4(df)
   mass_variables.add_Mggb(df)
+  mass_variables.add_Mggb2(df)
 #   mass_variables.add_Mggb_met1(df)
   #add_helicity_angles(df)
   #divide_pt_by_mgg(df)

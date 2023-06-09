@@ -16,34 +16,36 @@ def getGrid(path):
       MYs.append(int(dataset.split("_")[9]))
   return np.array(MXs), np.array(MYs)
 
+Y_ggbb = getGrid("proc_lists/NMSSM_XYH_Y_gg_H_bb.txt")
 Y_gg = getGrid("plotting/Y_gg_query.txt")
 Y_tautau = getGrid("plotting/Y_tautau_query.txt")
 
-plt.scatter(Y_tautau[0], Y_tautau[1], label=r"$Y\rightarrow\tau\tau$ only")
-plt.scatter(Y_gg[0], Y_gg[1], label=r"$Y\rightarrow\tau\tau$ and $Y\rightarrow \gamma\gamma$")
+plt.scatter(Y_ggbb[0], Y_ggbb[1], label=r"$X \rightarrow YH \rightarrow \gamma\gamma$bb")
+# plt.scatter(Y_tautau[0], Y_tautau[1], label=r"$Y\rightarrow\tau\tau$ only")
+# plt.scatter(Y_gg[0], Y_gg[1], label=r"$Y\rightarrow\tau\tau$ and $Y\rightarrow \gamma\gamma$")
 
-plt.xlabel(r"$m_X$")
-plt.ylabel(r"$m_Y$")
+plt.xlabel(r"$m_X$ [GeV]")
+plt.ylabel(r"$m_Y$ [GeV]")
 plt.legend()
 plt.savefig("NMSSM_grid.png")
 plt.savefig("NMSSM_grid.pdf")
 plt.clf()
 
-plt.scatter(Y_gg[0][Y_gg[1]<=125], Y_gg[1][Y_gg[1]<=125], label=r"$Y\rightarrow\tau\tau$ and $Y\rightarrow \gamma\gamma$")
+# plt.scatter(Y_gg[0][Y_gg[1]<=125], Y_gg[1][Y_gg[1]<=125], label=r"$Y\rightarrow\tau\tau$ and $Y\rightarrow \gamma\gamma$")
 
-plt.xlabel(r"$m_X$")
-plt.ylabel(r"$m_Y$")
-plt.legend()
-plt.savefig("NMSSM_grid_low_mass.png")
-plt.savefig("NMSSM_grid_low_mass.pdf")
-plt.clf()
+# plt.xlabel(r"$m_X$")
+# plt.ylabel(r"$m_Y$")
+# plt.legend()
+# plt.savefig("NMSSM_grid_low_mass.png")
+# plt.savefig("NMSSM_grid_low_mass.pdf")
+# plt.clf()
 
-import common
-plt.gcf().set_size_inches(12.5, 3)
-plt.gca().get_yaxis().set_visible(False)
-graviton_procs = common.sig_procs["X_HH"]
-mxs = [common.get_MX_MY(proc)[0] for proc in graviton_procs]
-plt.scatter(mxs, [1 for each in mxs])
-plt.xlabel(r"$m_X$")
-plt.savefig("X_HH_grid.png")
-plt.savefig("X_HH_grid.pdf")
+# import common
+# plt.gcf().set_size_inches(12.5, 3)
+# plt.gca().get_yaxis().set_visible(False)
+# graviton_procs = common.sig_procs["X_HH"]
+# mxs = [common.get_MX_MY(proc)[0] for proc in graviton_procs]
+# plt.scatter(mxs, [1 for each in mxs])
+# plt.xlabel(r"$m_X$")
+# plt.savefig("X_HH_grid.png")
+# plt.savefig("X_HH_grid.pdf")

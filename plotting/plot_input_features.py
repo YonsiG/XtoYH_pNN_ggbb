@@ -23,7 +23,8 @@ colour_schemes = {
   5: ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99'],
   6: ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c'],
   7: ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f'],
-  8: ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00']
+  8: ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00'],
+  10:['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#6a3d9a','#d01c8b']
 }
 
 # colour_schemes = {
@@ -247,7 +248,7 @@ def plot_feature(data, bkg, sig, proc_dict, sig_procs, column, nbins, feature_ra
     xlabel = column
   axs[1].set_xlabel(xlabel)
   axs[1].set_ylabel("Data / MC")
-  axs[1].set_ylim([0.5, 1.5])
+  axs[1].set_ylim([0., 2.])
 
   plt.sca(axs[0])
   mplhep.cms.label(llabel="Work in Progress", data=True, lumi=common.tot_lumi, loc=0)
@@ -290,7 +291,10 @@ def plot_feature(data, bkg, sig, proc_dict, sig_procs, column, nbins, feature_ra
     axs[0].hist(edges[:-1], edges, weights=sig_hist*sig_sf, label=getSigLabel(sig_proc), histtype='step', lw=4, path_effects=[pe.Stroke(linewidth=6, foreground='w'), pe.Normal()], zorder=9) #signal
 
   if only_legend: 
-    axs[0].legend(ncol=int((2+len(sig_procs)+len(bkg_stack))/3), frameon=True, loc="center", title=r"Signal normalised to %d $\times$ expected limit"%scale)
+    if limits is None: 
+      axs[0].legend(ncol=int((2+len(sig_procs)+len(bkg_stack))/3), frameon=True, loc="center", title=r"Signal normalised to data")
+    else:
+      axs[0].legend(ncol=int((2+len(sig_procs)+len(bkg_stack))/3), frameon=True, loc="center", title=r"Signal normalised to %d $\times$ expected limit"%scale)
   
   axs[0].set_yscale("linear")
   if not no_legend:

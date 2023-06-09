@@ -3,7 +3,7 @@ import os
 # get LOW_MASS_MODE from environment variable if exists, otherwise default to hard-coded value
 LOW_MASS_MODE = os.getenv("LOW_MASS_MODE")
 if LOW_MASS_MODE is None:
-  LOW_MASS_MODE = False
+  LOW_MASS_MODE = True
 else:
   LOW_MASS_MODE = (LOW_MASS_MODE == "True")
 print('\033[93m')
@@ -54,12 +54,16 @@ sig_procs["all"] = sig_procs["X_HH"] + sig_procs["X_YH_Y_gg"] + sig_procs["X_YH_
 if not LOW_MASS_MODE:
   bkg_procs = {
     'Diphoton': ['DiPhoton40to80','DiPhoton'],
+    # 'Diphoton': ['DiPhoton'],
     'GJets': ['GJets_HT-100To200', 'GJets_HT-200To400', 'GJets_HT-400To600', 'GJets_HT-40To100', 'GJets_HT-600ToInf'],
     'TT': ['TTGG', 'TTGamma', 'TTJets'],
     'SM Higgs': ['VBFH_M125', 'VH_M125', 'ggH_M125', 'ttH_M125'],
     'VGamma': ['WGamma', 'ZGamma'],
     'DY': ['DY'],
-    'DiBoson': ['WW', 'ZZ', 'WZ']
+    'DiBoson': ['WW', 'ZZ', 'WZ'],
+    'HH':['HHbbgg'],
+    'TTV': ['TTW','TTZ'],
+    'tZq':['tZq']
   }
 else:
   bkg_procs = {
@@ -70,7 +74,10 @@ else:
     'SM Higgs': ['VBFH_M125', 'VH_M125', 'ggH_M125', 'ttH_M125'],
     'VGamma': ['WGamma', 'ZGamma'],
     'DY': ['DY'],
-    #'VV': ['WW', 'ZZ', 'WZ']
+    'Diboson': ['WW', 'ZZ', 'WZ'],
+    'HH':['HHbbgg'],
+    'TTV': ['TTW','TTZ'],
+    'tZq':['tZq']
     #'DY': ['DYinvEveto'],
     #'VV': ['WWinvEveto', 'ZZinvEveto', 'WZinvEveto']
   }
@@ -112,6 +119,9 @@ train_features['important_17_corr'] = ["LeadPhoton_pt_mgg", "ditau_mass", "Suble
 train_features['important_17_corr_no_mggtau'] = ["LeadPhoton_pt_mgg", "ditau_mass", "SubleadPhoton_lead_lepton_dR", "ditau_dR", "Diphoton_dPhi", "ditau_deta", "LeadPhoton_lead_lepton_dR", "Diphoton_pt_mgg", "reco_MX_MET_mgg", "Diphoton_ditau_deta", "lead_lepton_mass", "diphoton_met_dPhi", "ditau_pt", "category", "Diphoton_sublead_lepton_dR", "MET_pt", "jet_1_pt", "ditau_dphi", "dilep_leadpho_mass", "lead_lepton_pt", "ditau_met_dPhi", "Diphoton_lead_lepton_dR", "LeadPhoton_ditau_dR", "Diphoton_lead_lepton_deta", "Diphoton_sublead_lepton_deta", "SubleadPhoton_pt_mgg", "Diphoton_ditau_dphi"]
 train_features['important_22_debug_bbgg'] = ["xcand_mass","xcand_mass_mgg","Diphoton_mass","LeadPhoton_pt_mgg", "dijet_mass", "SubleadPhoton_dijet_lead_dR", "dijet_dR", "Diphoton_dPhi", "dijet_deta", "LeadPhoton_dijet_lead_dR", "Diphoton_pt_mgg", "Diphoton_dijet_deta", "dijet_lead_mass", "dijet_pt", "Diphoton_dijet_sublead_dR", "dijet_dphi", "dijet_lead_pt", "dijet_lead_btagDeepFlavB", "dijet_sublead_btagDeepFlavB" , "Diphoton_dijet_lead_dR", "LeadPhoton_dijet_dR", "Diphoton_dijet_lead_deta", "Diphoton_dijet_sublead_deta", "SubleadPhoton_pt_mgg", "Diphoton_dijet_dphi","reco_MX_mgg"]
 train_features['important_22_corr_bbgg'] = ["LeadPhoton_pt_mgg", "dijet_mass", "SubleadPhoton_dijet_lead_dR", "dijet_dR", "Diphoton_dPhi", "dijet_deta", "LeadPhoton_dijet_lead_dR", "Diphoton_pt_mgg", "Diphoton_dijet_deta", "dijet_lead_mass", "dijet_pt", "Diphoton_dijet_sublead_dR", "dijet_dphi", "dijet_lead_pt", "dijet_lead_btagDeepFlavB", "dijet_sublead_btagDeepFlavB" , "Diphoton_dijet_lead_dR", "LeadPhoton_dijet_dR", "Diphoton_dijet_lead_deta", "Diphoton_dijet_sublead_deta", "SubleadPhoton_pt_mgg", "Diphoton_dijet_dphi","reco_MX_mgg"]
+train_features['important_22_corr_bbgg_noMX'] = ["LeadPhoton_pt_mgg", "dijet_mass", "SubleadPhoton_dijet_lead_dR", "dijet_dR", "Diphoton_dPhi", "dijet_deta", "LeadPhoton_dijet_lead_dR", "Diphoton_pt_mgg", "Diphoton_dijet_deta", "dijet_lead_mass", "dijet_pt", "Diphoton_dijet_sublead_dR", "dijet_dphi", "dijet_lead_pt", "dijet_lead_btagDeepFlavB", "dijet_sublead_btagDeepFlavB" , "Diphoton_dijet_lead_dR", "LeadPhoton_dijet_dR", "Diphoton_dijet_lead_deta", "Diphoton_dijet_sublead_deta", "SubleadPhoton_pt_mgg", "Diphoton_dijet_dphi"]
+train_features['important_22_corr_bbgg_mggb'] = ["LeadPhoton_pt_mgg", "dijet_mass", "SubleadPhoton_dijet_lead_dR", "dijet_dR", "Diphoton_dPhi", "dijet_deta", "LeadPhoton_dijet_lead_dR", "Diphoton_pt_mgg", "Diphoton_dijet_deta", "dijet_lead_mass", "dijet_pt", "Diphoton_dijet_sublead_dR", "dijet_dphi", "dijet_lead_pt", "dijet_lead_btagDeepFlavB", "dijet_sublead_btagDeepFlavB" , "Diphoton_dijet_lead_dR", "LeadPhoton_dijet_dR", "Diphoton_dijet_lead_deta", "Diphoton_dijet_sublead_deta", "SubleadPhoton_pt_mgg", "Diphoton_dijet_dphi","reco_MX_mgg"]
+train_features['important_22_corr_bbgg_mggb2'] = ["LeadPhoton_pt_mgg", "dijet_mass", "SubleadPhoton_dijet_lead_dR", "dijet_dR", "Diphoton_dPhi", "dijet_deta", "LeadPhoton_dijet_lead_dR", "Diphoton_pt_mgg", "Diphoton_dijet_deta", "dijet_lead_mass", "dijet_pt", "Diphoton_dijet_sublead_dR", "dijet_dphi", "dijet_lead_pt", "dijet_lead_btagDeepFlavB", "dijet_sublead_btagDeepFlavB" , "Diphoton_dijet_lead_dR", "LeadPhoton_dijet_dR", "Diphoton_dijet_lead_deta", "Diphoton_dijet_sublead_deta", "SubleadPhoton_pt_mgg", "Diphoton_dijet_dphi","reco_MX_mgg"]
 
 # same as important_17_corr_no_mggtau except change reco_MX_MET_mgg -> reco_MX_mgg (svfit has MET incorporated)
 train_features['preapproval'] = ["LeadPhoton_pt_mgg", "ditau_mass", "SubleadPhoton_lead_lepton_dR", "ditau_dR", "Diphoton_dPhi", "ditau_deta", "LeadPhoton_lead_lepton_dR", "Diphoton_pt_mgg", "reco_MX_mgg", "Diphoton_ditau_deta", "lead_lepton_mass", "diphoton_met_dPhi", "ditau_pt", "category", "Diphoton_sublead_lepton_dR", "MET_pt", "jet_1_pt", "ditau_dphi", "dilep_leadpho_mass", "lead_lepton_pt", "ditau_met_dPhi", "Diphoton_lead_lepton_dR", "LeadPhoton_ditau_dR", "Diphoton_lead_lepton_deta", "Diphoton_sublead_lepton_deta", "SubleadPhoton_pt_mgg", "Diphoton_ditau_dphi"]

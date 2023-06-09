@@ -55,6 +55,8 @@ def getGJetIds(proc_dict):
   return gjet_ids
 
 def loadDataFrame(args, train_features):
+  print(">> Loading dataframe")
+  if TRACK_MEMORY:  log_memory()
   columns_to_load = ["Diphoton_mass", "weight_central", "process_id", "event", "year"] + train_features
   if not args.parquetSystematic: columns_to_load += common.weights_systematics
   columns_to_load = set(columns_to_load)
@@ -78,7 +80,6 @@ def loadDataFrame(args, train_features):
   needed_ids = [each for each in needed_ids if each != None] 
 
   reversed_proc_dict = {proc_dict[key]:key for key in proc_dict.keys()}
-
   for i in df.process_id.unique():
     if i in needed_ids: 
       print("> %s"%(reversed_proc_dict[i]).ljust(40), "kept")
@@ -338,7 +339,7 @@ def evaluatePlotAndSave(args, proc_dict, model, train_features, train_df, test_d
   models.setSeed(args.seed)
   addScores(args, model, train_features, train_df, test_df, data)
 
-  if not args.skipPlots:
+  if not args.skipPlots and not args.skipROC:
     print(">> Plotting ROC curves")
     metrics = {}
     for sig_proc in args.eval_sig_procs:
@@ -346,7 +347,9 @@ def evaluatePlotAndSave(args, proc_dict, model, train_features, train_df, test_d
       train_auc, test_auc = doROC(args, train_df, test_df, sig_proc, proc_dict)
       metrics["AUC/%d_%d_train_auc"%common.get_MX_MY(sig_proc)] = train_auc
       metrics["AUC/%d_%d_test_auc"%common.get_MX_MY(sig_proc)] = test_auc
+      print(" ",metrics)
     if hasattr(model["classifier"], "addHyperparamMetrics"):
+     print(sig_proc," has HP metrics")
      model["classifier"].addHyperparamMetrics(metrics)
 
     if hasattr(model["classifier"], "train_loss"):
@@ -379,7 +382,13 @@ def evaluatePlotAndSave(args, proc_dict, model, train_features, train_df, test_d
   del train_df, test_df, data
   output_bkg_MC = output_df[(output_df.y==0) & (output_df.process_id != proc_dict["Data"])]
 
-  transform_bkg = output_bkg_MC
+  if args.loadTransformBkg is not None:
+    print(">> Loading dataframe for score transformation")
+    columns = list(filter(lambda x: "score" in x, output_df.columns)) + ["weight", "y", "process_id"]
+    transform_df = pd.read_parquet(args.loadTransformBkg, columns=columns)
+    transform_bkg = transform_df[(transform_df.y==0) & (transform_df.process_id != proc_dict["Data"])]
+  else:
+    transform_bkg = output_bkg_MC
 
   if args.remove_gjets:
     transform_proc_dict = proc_dict
@@ -403,7 +412,8 @@ def evaluatePlotAndSave(args, proc_dict, model, train_features, train_df, test_d
   for column in output_df:
     if "intermediate" in column: columns_to_keep.append(column)
   columns_to_keep = set(columns_to_keep)
-  output_df = output_df[columns_to_keep]
+    
+  if not args.keepAllFeatures: output_df = output_df[columns_to_keep]
 
   if not args.dropSystematicWeights:
     print(">> Loading all systematic weights")
@@ -669,19 +679,20 @@ if __name__=="__main__":
 
   parser.add_argument('--do-cv', type=int, default=0, help="Give a non-zero number which specifies the number of folds to do for cv. Will then run script over all folds.")
   parser.add_argument('--cv-fold', type=str, default=None, help="If doing cross-validation, specify the number of folds and which to run on. Example: '--cv-fold 2/5' means the second out of five folds.")
-
+  parser.add_argument('--parquetSystematic',action="store_true")
+  parser.add_argument('--loadTransformBkg', type=str, default=None)
   parser.add_argument('--outputModel', type=str, default=None)
   parser.add_argument('--loadModel', type=str, default=None)
   parser.add_argument('--outputName', type=str, default="output.parquet")
   parser.add_argument('--skipPlots', action="store_true")
+  parser.add_argument('--skipROC', action="store_true")
 
   parser.add_argument('--extra-masses', type=str, default=None)
 
   parser.add_argument('--dropSystematicWeights', action="store_true")
+  parser.add_argument('--keepAllFeatures', action="store_true", help="output parquet will retain all training features")
 
   parser.add_argument('--loadTransformCDFs', type=str, default=None)
   parser.add_argument('--outputTransformCDFs', type=str, default=None)
 
-  #import cProfile
-  #cProfile.run('start(parser)', 'restats')
   start(parser)

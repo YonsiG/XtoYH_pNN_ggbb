@@ -252,7 +252,7 @@ def main(args):
     proc_dict = json.load(f)["sample_id_map"]
 
   columns = list(filter(lambda x: "intermediate" in x, common.getColumns(args.parquet_input)))
-  columns += ["process_id", "category", "Diphoton_mass", "weight"]
+  columns += ["process_id", "Diphoton_mass", "weight"]
   df = pd.read_parquet(args.parquet_input, columns=columns)
 
   bkg_ids = [proc_dict[proc] for proc in common.bkg_procs["Diphoton"]]
