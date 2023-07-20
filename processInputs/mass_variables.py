@@ -55,6 +55,8 @@ def add_reco_MX(df):
 
   df["reco_MX"] = np.sqrt(HH_E**2 - HH_px**2 - HH_py**2 - HH_pz**2)
   df["reco_MX_mgg"] = df["reco_MX"] / df["Diphoton_mass"]
+  df["reco_MX_mgg2"] = df["reco_MX"] - df["Diphoton_mass"]
+  df["reco_MX_mgg3"] = df["reco_MX_mgg"] - df["Diphoton_mass"]
   df["xcand_mass_mgg"] = df["xcand_mass"] / df["Diphoton_mass"]
 #   df.loc[df.category == 8, "reco_MX"] = common.dummy_val
 #   df.loc[df.category == 8, "reco_MX_mgg"] = common.dummy_val
@@ -88,7 +90,7 @@ def add_reco_MX_MET(df):
 #   df.loc[df.category == 8, "reco_MX_MET"] = common.dummy_val
 #   df.loc[df.category == 8, "reco_MX_MET_mgg"] = common.dummy_val
 
-def add_Mggb(df):
+def add_reco_Mggb(df):
   H1_px = df.Diphoton_pt * np.cos(df.Diphoton_phi)
   H1_py = df.Diphoton_pt * np.sin(df.Diphoton_phi)
   H1_pz = df.Diphoton_pt * np.sinh(df.Diphoton_eta)
@@ -102,12 +104,6 @@ def add_Mggb(df):
   H2_P = df.dijet_lead_pt * np.cosh(df.dijet_lead_eta)
   H2_E = np.sqrt(H2_P**2 + df.dijet_lead_mass**2)
 
-#   H2_px = df.lead_lepton_pt * np.cos(df.lead_lepton_phi)
-#   H2_py = df.lead_lepton_pt * np.sin(df.lead_lepton_phi)
-#   H2_pz = df.lead_lepton_pt * np.sinh(df.lead_lepton_eta)
-#   H2_P = df.lead_lepton_pt * np.cosh(df.lead_lepton_eta)
-#   H2_E = np.sqrt(H2_P**2 + df.lead_lepton_mass**2)
-
   HH_px = H1_px + H2_px
   HH_py = H1_py + H2_py
   HH_pz = H1_pz + H2_pz
@@ -117,7 +113,7 @@ def add_Mggb(df):
   df["reco_Mggb_mgg"] = df["reco_Mggb"] / df["Diphoton_mass"]
   df["reco_Mggb_mgg2"] = df["reco_Mggb"] - df["Diphoton_mass"]
 
-def add_Mggb2(df):
+def add_reco_Mggb2(df):
   H1_px = df.Diphoton_pt * np.cos(df.Diphoton_phi)
   H1_py = df.Diphoton_pt * np.sin(df.Diphoton_phi)
   H1_pz = df.Diphoton_pt * np.sinh(df.Diphoton_eta)
@@ -130,12 +126,6 @@ def add_Mggb2(df):
   H2_P = df.dijet_sublead_pt * np.cosh(df.dijet_sublead_eta)
   H2_E = np.sqrt(H2_P**2 + df.dijet_sublead_mass**2)
 
-#   H2_px = df.lead_lepton_pt * np.cos(df.lead_lepton_phi)
-#   H2_py = df.lead_lepton_pt * np.sin(df.lead_lepton_phi)
-#   H2_pz = df.lead_lepton_pt * np.sinh(df.lead_lepton_eta)
-#   H2_P = df.lead_lepton_pt * np.cosh(df.lead_lepton_eta)
-#   H2_E = np.sqrt(H2_P**2 + df.lead_lepton_mass**2)
-
   HH_px = H1_px + H2_px
   HH_py = H1_py + H2_py
   HH_pz = H1_pz + H2_pz
@@ -145,6 +135,54 @@ def add_Mggb2(df):
   df["reco_Mggb2_mgg"] = df["reco_Mggb2"] / df["Diphoton_mass"]
   df["reco_Mggb2_mgg2"] = df["reco_Mggb2"] - df["Diphoton_mass"]
 
+def add_reco_Mgbb(df):
+  # I would move to ak 4vectors here 
+  H1_px = df.LeadPhoton_pt * np.cos(df.LeadPhoton_phi)
+  H1_py = df.LeadPhoton_pt * np.sin(df.LeadPhoton_phi)
+  H1_pz = df.LeadPhoton_pt * np.sinh(df.LeadPhoton_eta)
+  H1_P = df.LeadPhoton_pt * np.cosh(df.LeadPhoton_eta)
+  H1_E = np.sqrt(H1_P**2)
+
+  H2_px = df.dijet_pt * np.cos(df.dijet_phi)
+  H2_py = df.dijet_pt * np.sin(df.dijet_phi)
+  H2_pz = df.dijet_pt * np.sinh(df.dijet_eta)
+  H2_P = df.dijet_pt * np.cosh(df.dijet_eta)
+  H2_E = np.sqrt(H2_P**2 + df.dijet_mass**2)
+
+  HH_px = H1_px + H2_px
+  HH_py = H1_py + H2_py
+  HH_pz = H1_pz + H2_pz
+  HH_E = H1_E + H2_E  
+
+  df["reco_Mgbb"] = np.sqrt(HH_E**2 - HH_px**2 - HH_py**2 - HH_pz**2)
+  df["reco_Mgbb_mgg"] = df["reco_Mgbb"] / df["Diphoton_mass"]
+  df["reco_Mgbb_mgg2"] = df["reco_Mgbb"] - df["Diphoton_mass"]
+
+def add_reco_Mgbb2(df):
+  # I would move to ak 4vectors here 
+  H1_px = df.SubleadPhoton_pt * np.cos(df.SubleadPhoton_phi)
+  H1_py = df.SubleadPhoton_pt * np.sin(df.SubleadPhoton_phi)
+  H1_pz = df.SubleadPhoton_pt * np.sinh(df.SubleadPhoton_eta)
+  H1_P = df.SubleadPhoton_pt * np.cosh(df.SubleadPhoton_eta)
+  H1_E = np.sqrt(H1_P**2 )
+
+  H2_px = df.dijet_pt * np.cos(df.dijet_phi)
+  H2_py = df.dijet_pt * np.sin(df.dijet_phi)
+  H2_pz = df.dijet_pt * np.sinh(df.dijet_eta)
+  H2_P = df.dijet_pt * np.cosh(df.dijet_eta)
+  H2_E = np.sqrt(H2_P**2 + df.dijet_mass**2)
+
+
+
+  HH_px = H1_px + H2_px
+  HH_py = H1_py + H2_py
+  HH_pz = H1_pz + H2_pz
+  HH_E = H1_E + H2_E  
+
+  df["reco_Mgbb2"] = np.sqrt(HH_E**2 - HH_px**2 - HH_py**2 - HH_pz**2)
+  df["reco_Mgbb2_mgg"] = df["reco_Mgbb2"] / df["Diphoton_mass"]
+  df["reco_Mgbb2_mgg2"] = df["reco_Mgbb2"] - df["Diphoton_mass"]
+  
 def add_Mggb_met1(df):
   H1_px = df.Diphoton_pt * np.cos(df.Diphoton_phi)
   H1_py = df.Diphoton_pt * np.sin(df.Diphoton_phi)
