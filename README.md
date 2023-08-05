@@ -31,6 +31,7 @@ for file in $files ; do
 done
 ```  
 Typically the `summary.json` file lives in the same path as the HiggsDNA output. The -f option selects the list of input features (from [`common.py`](https://github.com/cmstas/XtoYH_pNN/blob/main/common.py#L69-L81)) that need to be added and will be considered in the pNN training.
+Latest summary used, containing DDGJets is: ```/ceph/cms/store/user/azecchin/pNN/ggbb-inputs/looper/DDGjets_summary.json```
 
 ### 4. Plot input features
 Not necessary, but you might want to take a look at how signals and background look like
