@@ -227,7 +227,7 @@ def loadDataFrames(args, proc_dict):
   dfs = {}
   
   #load nominal dataframe
-  df = loadDataFrame(os.path.join(args.parquet_input, "merged_nominal.parquet"), proc_dict, sample_fraction=args.dataset_fraction)
+  df = loadDataFrame(args.parquet_input, proc_dict, sample_fraction=args.dataset_fraction)
   #systematic_columns = list(filter(lambda x: ("intermediate_transformed_score" in x), df.columns)) + ["Diphoton_mass", "process_id", "weight", "y", "year"]
   dfs["nominal"] = df
 

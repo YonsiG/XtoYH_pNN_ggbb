@@ -37,7 +37,7 @@ def getBoundaries(bkg, nbkg, score_name="score"):
   correspond to selecting the nbkg[0]-highest scoring events, followed by the next nbkg[1]...
   """
   score = bkg[score_name].to_numpy()
-  print(score[:20])
+#   print("\n dataframe\n",score[:20])
   boundaries = [0] + list((score[np.array(nbkg)-1] + score[np.array(nbkg)])/2) + [1] #find score in between two events which yield nbkg
   return boundaries
 
@@ -58,6 +58,8 @@ def optimiseBoundaries(args, bkg, sigs):
   sigs_to_optim = [df_package(sigs[sig_proc], sig_proc) for sig_proc in args.sig_procs]
   
   max_n = min([len(each) for each in bkgs_to_optim]) #maximum number to define categories by
+#   max_n = 2000 #TODO does that keeps ncat under control? what happend to the UL??
+  #TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO#TODO
 
   # sort score ready for getBoundaries functio 
   for bkg_to_optim in bkgs_to_optim:

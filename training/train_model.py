@@ -50,7 +50,8 @@ def getProcId(proc_dict, proc):
     return None
 
 def getGJetIds(proc_dict):
-  gjet_ids = [getProcId(proc_dict, proc) for proc in common.bkg_procs["GJets"]] + [getProcId(proc_dict, "TTJets")]
+#   gjet_ids = [getProcId(proc_dict, proc) for proc in common.bkg_procs["GJets"]] + [getProcId(proc_dict, "TTJets")]
+  gjet_ids = [getProcId(proc_dict, "TTJets")]
   gjet_ids = [each for each in gjet_ids if each != None]
   return gjet_ids
 
@@ -170,7 +171,9 @@ def addScores(args, model, train_features, train_df, test_df, data, MX_MY_to_eva
   pd.options.mode.chained_assignment = None
 
   dfs = [train_df, test_df, data]
-  
+  print ("\n\nDATA",data)
+  print ("\n\nMC_test",test_df)
+  print ("\n\nMC_train",train_df)
   #evaluate at nominal mass points
   if MX_MY_to_eval is None:
     MX_MY_to_eval = []
@@ -183,10 +186,12 @@ def addScores(args, model, train_features, train_df, test_df, data, MX_MY_to_eva
     df.loc[:, "MY"] = MX_MY_to_eval[0][1]
   for i, (MX, MY) in enumerate(MX_MY_to_eval):
     for df in dfs:
+      if df.empty: continue
       df.iloc[i, df.columns.get_loc("MX")] = MX
       df.iloc[i, df.columns.get_loc("MY")] = MY
 
   for df in dfs:
+    if df.empty: continue
     all_predictions = model.predict_proba(df[train_features])
     for i, (MX, MY) in enumerate(MX_MY_to_eval):
       sig_proc = common.get_sig_proc(args.train_sig_procs[0], MX, MY)
@@ -454,7 +459,13 @@ def main(args):
   del df
 
   train_df, test_df = train_test_split_consistent(MC, test_size=args.test_size, random_state=1)
-  
+
+#   if not MC.empty:
+#     train_df, test_df = train_test_split_consistent(MC, test_size=args.test_size, random_state=1)
+#   else:
+#     train_df = MC
+#     test_df = MC
+
   if args.data_as_bkg:
     train_df = pd.concat([train_df[train_df.y==1], data])
   if args.cv_fold is not None:
@@ -465,7 +476,7 @@ def main(args):
   if not args.outputOnlyTest:
     # keep discarded training events in data as a trick to retain all events when outputting
     data = pd.concat([data, train_df[~s]]) 
-  train_df = train_df[s] 
+#   train_df = train_df[s] 
 
   if args.remove_gjets:
     gjet_ids = getGJetIds(proc_dict)
@@ -530,6 +541,8 @@ def main(args):
   if args.feature_importance:
     featureImportance(args, classifier.model, train_features, train_df[s][train_features], train_df[s]["y"], train_df[s]["weight"])
 
+#   print(train_df)
+#   print(test_df)
   evaluatePlotAndSave(args, proc_dict, model, train_features, train_df, test_df, data)
 
   if args.outputModel is not None:

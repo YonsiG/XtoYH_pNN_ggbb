@@ -435,7 +435,7 @@ class ParamNN(ParamModel):
     self.equaliseWeights(Xv, yv, wv)
     wv *= sum(wt) / sum(wv) #adjust weight of validation to allow comparison of losses
     
-    print("Minimum weight in training set: ", min(abs(wt[yt==0])))
+    print("Minimum weight in training set: ", min(abs(wt[yt==0])))  
     print("Maximum weight in training set: ", max(abs(wt[yt==0])))
 
     print(">> Training sample summary")
@@ -450,9 +450,9 @@ class ParamNN(ParamModel):
     self.train_loss = []
     self.validation_loss = []
 
-    print(">> Calculating epoch size (1/6 of before)")
+    print(">> Calculating epoch size (1/50 of before)")
     #epoch_size = min([int(sum(yt==0)/len(self.unique_combinations)), sum(yt==1)])*2 #epoch size is 2*nbkg or 2*nsig, whatever is smallest
-    epoch_size = min([sum(yt==0), sum(yt==1)])*2/6 # #epoch size is 2*nbkg or 2*nsig, whatever is smallest
+    epoch_size = min([sum(yt==0), sum(yt==1)])*2/50 # #epoch size is 2*nbkg or 2*nsig, whatever is smallest
 
     #find indicies for each mass, useful for calculating loss later
     print(">> Finding mass indicies")

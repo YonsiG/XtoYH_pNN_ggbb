@@ -426,10 +426,12 @@ def getBoundariesPerformance(bkg, sig, pres, sr, boundaries, i=None):
   nbkgs = []
   ncats = len(boundaries)-1
 
+#   print ("boundaries ",boundaries )
   #return dataframe with only events within category
-  select = lambda df, i: df[(df.score > boundaries[i]) & (df.score <= boundaries[i+1])]
+  select = lambda df, i: df[(df.score > min(boundaries[i],0.9999999)) & (df.score <= boundaries[i+1])]
 
   for i in range(ncats):
+    # print ("cat ",i," boundary ",boundaries[i], " df " ,select(bkg,i))
     assert len(select(bkg, i)) > 0, print(i)
     nsig, nbkg, nbkg_err, bkg_func = performFit(select(sig, i), select(bkg, i), pres, sr)
 
