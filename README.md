@@ -53,6 +53,16 @@ python training/train_model.py -i <outdir>/merged_nominal.parquet -s ${indir}/su
 ```
 The specific hyperparameters can be choosen from the one available in the hp folder. In the future one could run an optimisation of the HP once we move towards ggbb based features.
 
+#### 6.1 current input and training features
+The current input parquet files containing the DDGJets estimation and not applying the HLT bit in MC + containing the 2 extra mass variables that were looking promising from Joshua preliminary results are here ```/ceph/cms/store/user/azecchin/pNN/ggbb-inputs/looper/DDGJets_noHLTbit_newMXaggr_merged_nominal.parquet``` 
+
+If you want to include them in the training use this features lists:
+``` important_22_corr_bbgg_newMX``` or ```important_22_corr_bbgg_newMXaggr```
+
+Baseline feature list for training is ```important_22_corr_bbgg_noMX```
+
+
+
 ### 7. Parametric tests
 ```
 python training/train_model.py -i <outdir>/merged_nominal.parquet -s ${indir}/summary.json -o <outdir>/paramTests -p $(cat proc_lists/Graviton.txt) --train-features important_17_corr_no_mggtau --model ParamNN --outputOnlyTest --remove-gjets --hyperparams hp/Graviton.json --only-ROC --do-param-tests
