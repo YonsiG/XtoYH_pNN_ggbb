@@ -62,14 +62,37 @@ If you want to include them in the training use this features lists:
 Baseline feature list for training is ```important_22_corr_bbgg_noMX```
 
 ##### 6.2 extra options for training
+*saving the model*
+```
+--outputModel
+--outputTransformCDFs
+```
+These to options have to be used together to save the pNN model and the score transformation pdfs in the output folder (they take a folder as argument, e.g. ```--outputModel <out-dir> --outputTransformCDFs <out-dir>/cdfs```). This is useful to re-evaluate the pNN scores on different inputs or rerunning the score plots , without retraining the pNN.
+*loading a previously trained model*
+```
+--loadModel
+--loadTransformCDFs
+```
 
+If you want to load the pNN and run only the steps after the training, use this 2 options, providing the path for the model and the score transformation pdfs
 
+*skipping plots*
+To speed up the training process, or if you are using  a model to score new dataframes you might want to skip part of plots that are produced by default
+```
+---skipPlots
+```
+Use this option to avoid plotting the score distributions (both raw score and transformed).
 
+```
+--skipROC
+```
+Use this option to avoid plotting the ROC plots
 
-#### 6.3 loading a previosly trained model 
-
-If you want to load the pNN and run only the steps after the training 
-
+*saving all the training features in the output parquet file*
+```
+--keepAllFeatures
+```
+By default the output DF contains only the variables needed for flashggFinalFit, i.e. the diphoton mass and the systematic variations. If you want to take a look at the distributions of different training features for different pNN scores, you can use this option and the list of training features will also be saved in the scored parquet file.
 
 
 ### 7. Parametric tests
