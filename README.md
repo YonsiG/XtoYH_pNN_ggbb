@@ -61,6 +61,15 @@ If you want to include them in the training use this features lists:
 
 Baseline feature list for training is ```important_22_corr_bbgg_noMX```
 
+##### 6.2 extra options for training
+
+
+
+
+#### 6.3 loading a previosly trained model 
+
+If you want to load the pNN and run only the steps after the training 
+
 
 
 ### 7. Parametric tests
