@@ -171,9 +171,9 @@ def addScores(args, model, train_features, train_df, test_df, data, MX_MY_to_eva
   pd.options.mode.chained_assignment = None
 
   dfs = [train_df, test_df, data]
-  print ("\n\nDATA",data)
-  print ("\n\nMC_test",test_df)
-  print ("\n\nMC_train",train_df)
+#   print ("\n\nDATA",data)
+#   print ("\n\nMC_test",test_df)
+#   print ("\n\nMC_train",train_df)
   #evaluate at nominal mass points
   if MX_MY_to_eval is None:
     MX_MY_to_eval = []
