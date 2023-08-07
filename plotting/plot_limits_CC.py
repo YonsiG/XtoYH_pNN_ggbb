@@ -1,6 +1,7 @@
+import json
+import argparse
 import scipy.interpolate as spi
 import numpy as np
-import json
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -52,15 +53,21 @@ def json2limits(limits_json):
 
 if __name__=="__main__":
   
-    with open("/home/users/azecchin/Analysis/ResonantGGTT/Outputs/XtoYH_ggbb_2018_HLT_MCfix_looper/CatOptim/optim_results.json") as f:
-        limits_json = json.load(f) 
-    with open("/home/users/azecchin/Analysis/ResonantGGTT/Outputs/XtoYH_ggbb_2018_noMX/CatOptim/optim_results.json") as f:
-        noMX_limits_json = json.load(f) 
-    with open("/home/users/azecchin/Analysis/ResonantGGTT/Outputs/XtoYH_DDGJets/CatOptim/optim_results.json") as f:
-        noMX_DDGJ_limits_json = json.load(f) 
-    with open("/home/users/azecchin/Analysis/ResonantGGTT/Outputs/XtoYH_DDGJets_noHLTbit_newMX_model/CatOptim/optim_results.json") as f:
-        newMX_DDGJ_limits_json = json.load(f) 
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--optim-input', '-i', type=str, required=True, help="location of the optimisation results json")
+    args = parser.parse_args()
 
-    x,y,z = json2limits(newMX_DDGJ_limits_json)
+    # with open("/home/users/azecchin/Analysis/ResonantGGTT/Outputs/XtoYH_ggbb_2018_HLT_MCfix_looper/CatOptim/optim_results.json") as f:
+    #     limits_json = json.load(f) 
+    # with open("/home/users/azecchin/Analysis/ResonantGGTT/Outputs/XtoYH_ggbb_2018_noMX/CatOptim/optim_results.json") as f:
+    #     noMX_limits_json = json.load(f) 
+    # with open("/home/users/azecchin/Analysis/ResonantGGTT/Outputs/XtoYH_DDGJets/CatOptim/optim_results.json") as f:
+    #     noMX_DDGJ_limits_json = json.load(f) 
+    # with open("/home/users/azecchin/Analysis/ResonantGGTT/Outputs/XtoYH_DDGJets_noHLTbit_newMX_model/CatOptim/optim_results.json") as f:
+    #     newMX_DDGJ_limits_json = json.load(f) 
+    with open (args.optim_input+"/optim_results.json") as f:
+      limits_json = json.load(f)
+
+    x,y,z = json2limits(limits_json)
     ylabel=r"$\sigma(pp\rightarrow X)Br(X \rightarrow YH \rightarrow\gamma\gamma b b)$[fb]"
-    plotLimits2D(x,y,z,ylabel,"limits")
+    plotLimits2D(x,y,z,ylabel,args.optim_input+"/limits")
