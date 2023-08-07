@@ -31,6 +31,7 @@ for file in $files ; do
 done
 ```  
 Typically the `summary.json` file lives in the same path as the HiggsDNA output. The -f option selects the list of input features (from [`common.py`](https://github.com/cmstas/XtoYH_pNN/blob/main/common.py#L69-L81)) that need to be added and will be considered in the pNN training.
+Latest summary used, containing DDGJets is: ```/ceph/cms/store/user/azecchin/pNN/ggbb-inputs/looper/DDGjets_summary.json```
 
 ### 4. Plot input features
 Not necessary, but you might want to take a look at how signals and background look like
@@ -51,6 +52,48 @@ The above command finds the best hyperparameter set out of all combinations in t
 python training/train_model.py -i <outdir>/merged_nominal.parquet -s ${indir}/summary.json -o <outdir>/trained/ -p $(cat proc_lists/Graviton.txt) --train-features important_17_corr_no_mggtau --model ParamNN --outputOnlyTest --remove-gjets --hyperparams hp/Graviton.json --outputName merged_nominal.parquet --outputModel <outdir>/trained/model.pkl
 ```
 The specific hyperparameters can be choosen from the one available in the hp folder. In the future one could run an optimisation of the HP once we move towards ggbb based features.
+
+#### 6.1 current input and training features
+The current input parquet files containing the DDGJets estimation and not applying the HLT bit in MC + containing the 2 extra mass variables that were looking promising from Joshua preliminary results are here ```/ceph/cms/store/user/azecchin/pNN/ggbb-inputs/looper/DDGJets_noHLTbit_newMXaggr_merged_nominal.parquet``` 
+
+If you want to include them in the training use this features lists:
+``` important_22_corr_bbgg_newMX``` or ```important_22_corr_bbgg_newMXaggr```
+
+Baseline feature list for training is ```important_22_corr_bbgg_noMX```
+
+##### 6.2 extra options for training
+*saving the model*
+```
+--outputModel
+--outputTransformCDFs
+```
+These to options have to be used together to save the pNN model and the score transformation pdfs in the output folder (they take a folder as argument, e.g. ```--outputModel <out-dir> --outputTransformCDFs <out-dir>/cdfs```). This is useful to re-evaluate the pNN scores on different inputs or rerunning the score plots , without retraining the pNN.
+*loading a previously trained model*
+```
+--loadModel
+--loadTransformCDFs
+```
+
+If you want to load the pNN and run only the steps after the training, use this 2 options, providing the path for the model and the score transformation pdfs
+
+*skipping plots*
+To speed up the training process, or if you are using  a model to score new dataframes you might want to skip part of plots that are produced by default
+```
+---skipPlots
+```
+Use this option to avoid plotting the score distributions (both raw score and transformed).
+
+```
+--skipROC
+```
+Use this option to avoid plotting the ROC plots
+
+*saving all the training features in the output parquet file*
+```
+--keepAllFeatures
+```
+By default the output DF contains only the variables needed for flashggFinalFit, i.e. the diphoton mass and the systematic variations. If you want to take a look at the distributions of different training features for different pNN scores, you can use this option and the list of training features will also be saved in the scored parquet file.
+
 
 ### 7. Parametric tests
 ```
