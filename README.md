@@ -104,7 +104,9 @@ By default the output DF contains only the variables needed for flashggFinalFit,
 
 To plot the diphoton mass distribution, or all the training variables if saved in the scored dataframe, one can use the ```assess.py``` script from the HiggsDNA/bonus repository.
 In paricular this [`branch`](https://gitlab.cern.ch/azecchin/HiggsDNA/-/tree/tthh_topic_dd_gjets) contains a updates that can help producing SR-like plots.
-```assess.py``` takes as mandatory arguments the location of a scored dataframe, (the name of the DF should contained 'merged_nominal' to not be considered a systematic alternative collection), a ```summary.json``` as all the commands described so far  options are:
+```assess.py``` takes as mandatory arguments the location of a scored dataframe, (the name of the DF should contained 'merged_nominal' to not be considered a systematic alternative collection), a ```summary.json``` as all the commands described so far and a json file containing details for all the variables that will be plotted. The several options of the script are described in their help entries.
+A rudimental attemp to speed up the plotting for several signal points can be found in ```make_plots.py```.
+ 
 
 ### 7. Parametric tests
 ```
