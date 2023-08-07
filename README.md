@@ -171,17 +171,24 @@ python signalModelling/systematics.py -i <outdir>/trained -r <outdir>/trained/Ca
 ```
 Passing the systematics through the NN, evaluate their effect and save it under `<outdir>/Interpolation/systematics.json`.
 
-### 15. Output results
-```
-python optimisation/tag_to_finalfits.py -i <outdir>/trained/merged_nominal.parquet -r <outdir>/trained/CatOptim/optim_results.json -s <outdir>/summary.json -o <outdir>/trained --combineYears
-```
-Writing out output trees and yields in `<outdir>/trained/{outputTrees,yieldTables}` respectively.
-
-### 16. Resonant background modelling
+### 15. Resonant background modelling
 ```
 python signalModelling/resonant_bkg.py -i Outputs/Graviton/ -r Outputs/Graviton/CatOptim/optim_results.json -s Inputs_Graviton/summary.json -o Outputs/Graviton/ResonantBkg --systematics --make-plots
 ```
 With the above command, all resonant backgrounds are modelled, very simalarly to the signal modelling, if they contribute "enough", i.e. more than 0.1 events.
+
+### 16. Output results to Final Fit
+```
+python optimisation/tag_to_finalfits.py -i <outdir>/trained/merged_nominal.parquet -r <outdir>/trained/CatOptim/optim_results.json -s <outdir>/summary.json -o <outdir>/trained --combineYears
+```
+Writing out output trees and yields in `<outdir>/trained/{outputTrees,yieldTables}` respectively.
+The output signal models, resonant bkg models, and data sideband are packed into root trees that can be read directly from flashggFinalFit.
+To run FinalFit one can take some inspiration from Matthew branch of FF, in particular at the  [`get_limit_continuous_2d.sh`](https://github.com/MatthewDKnight/flashggFinalFit/blob/ggtt_python_bkg/get_limit_continuous_2d.sh) script.
+
+There are a few options in this script that are not specific to our analysis:
+- The `trees`, `sig_model`, and `res_bkg_model` variables.
+- Comment out the graviton/high mass settings and use only the low mass settings. Also for the time being we need to set do_dy_bkg to 0. 
+- The `../get_limit_something.sh` commands should work `qsub ...` commands are specific to batch submission at IC.  
 
 ## Things to do
 Run on ggbb signals:
