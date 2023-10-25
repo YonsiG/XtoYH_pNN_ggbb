@@ -88,7 +88,7 @@ def histogram(df, fit_range, nbins):
   
   bin_centers = (edges[:-1] + edges[1:])/2
   errors = np.sqrt(sumw2)
-
+  print(errors)
   non_zero_indicies = np.arange(len(errors))[errors>0]
   for i, lt in enumerate(errors<=0):
     if lt:
