@@ -298,8 +298,8 @@ def filterOptimResults(optim_results, mass_points):
     MX, MY = mass_point.split(",")
     MX = float(MX)
     MY = float(MY)
-
     for optim_result in optim_results:
       if get_MX_MY(optim_result["sig_proc"]) == (MX, MY):
         new_optim_results.append(optim_result)
   optim_results = new_optim_results
+  return optim_results

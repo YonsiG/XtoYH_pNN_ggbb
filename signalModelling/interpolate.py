@@ -68,6 +68,9 @@ def fitSignalModel(df, mx, outdir, my=125, fit_range_my=False, make_plots=False)
   else:
     fit_range = [112.5, 137.5] #everything else
 
+  print(mx)
+  print(my)
+  print(df[(df.MX==mx)&(df.MY==my)])
   if make_plots: 
     os.makedirs(outdir, exist_ok=True)
     popt, perr = fitDCB(df[(df.MX==mx)&(df.MY==my)], fit_range=fit_range, savepath=os.path.join(outdir, "mx_%d_my_%d.png"%(mx,my)))

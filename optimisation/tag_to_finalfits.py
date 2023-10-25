@@ -90,6 +90,12 @@ def main(args):
   with open(args.summary_input, "r") as f:
     proc_dict = json.load(f)["sample_id_map"]
 
+### Line 93
+#######adding lines for skimmed signal process for fast test*****
+  if args.mass_points is not None:
+    optim_results = common.filterOptimResults(optim_results, args.mass_points)
+#######################*******************************
+
   columns = common.getColumns(args.parquet_input)
   columns = list(filter(lambda x: x[:5] != "score", columns))
   df = pd.read_parquet(args.parquet_input, columns=columns)
@@ -167,6 +173,10 @@ if __name__=="__main__":
   parser.add_argument('--batch', action="store_true")
   parser.add_argument('--batch-slots', type=int, default=1)
   parser.add_argument('--controlRegions', action="store_true")
+### Line 175
+####### adding lines for skimmed signal test *******
+  parser.add_argument('--mass-points', nargs="+", default=None, help="Only create signal models for these mass points. Provide a list of MX,MY like 300,125 400,150...")
+###########################*************************
   args = parser.parse_args()
   
   os.makedirs(args.outdir, exist_ok=True)
