@@ -14,7 +14,12 @@ def assignSignalRegions(df, optim_results, score_name):
   
   boundaries = optim_results["category_boundaries"][::-1] #so that cat0 is most pure
   for i in range(len(boundaries)-1):
-    selection = (df[score_name] <= boundaries[i]) & (df[score_name] > boundaries[i+1])
+    if (boundaries[i]==boundaries[i-1]):
+        selection = (df[score_name] < boundaries[i]) & (df[score_name] > boundaries[i+1])
+    else:
+        selection = (df[score_name] <= boundaries[i]) & (df[score_name] > boundaries[i+1])
+    if (boundaries[i]==boundaries[i+1]):
+        selection = (df[score_name]==boundaries[i])
     df.loc[selection, "SR"] = i
   return df[df.SR!=-1]
 
@@ -135,11 +140,12 @@ def main(args):
 
       for i, year in enumerate(years):
         SRs = np.sort(tagged_df.SR.unique())
+        print(SRs)
         if args.dropLastCat: 
           SRs = SRs[:-1]
 
         if (SRs != [i for i in range(len(SRs))]).all():
-          print(f"Missing categories for MX={MX}, MY={MY}")
+          print("Missing categories for MX=%d, MY=%f"%(MX,MY))
           print("Will drop this mass point")
           print(np.unique(data.SR, return_counts=True))
           continue

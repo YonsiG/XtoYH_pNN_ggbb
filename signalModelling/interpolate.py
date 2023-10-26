@@ -68,9 +68,6 @@ def fitSignalModel(df, mx, outdir, my=125, fit_range_my=False, make_plots=False)
   else:
     fit_range = [112.5, 137.5] #everything else
 
-  print(mx)
-  print(my)
-  print(df[(df.MX==mx)&(df.MY==my)])
   if make_plots: 
     os.makedirs(outdir, exist_ok=True)
     popt, perr = fitDCB(df[(df.MX==mx)&(df.MY==my)], fit_range=fit_range, savepath=os.path.join(outdir, "mx_%d_my_%d.png"%(mx,my)))
@@ -87,12 +84,13 @@ def fitSignalModel(df, mx, outdir, my=125, fit_range_my=False, make_plots=False)
 def doSkipClosest(MX, MY, to_fit_masses, norms_nominal):  
   unique_mx = np.unique(to_fit_masses[:, 0])
   unique_my = np.unique(to_fit_masses[:, 1])
+  #argx = unique_mx[0]
   argx = interp1d(unique_mx, np.arange(len(unique_mx)), kind='linear')
   argy = lambda x: interp1d(unique_my, np.arange(len(unique_my)), kind='linear')(x) if len(unique_my)>1 else 0
 
   #find closest points on the grid
   dist = np.sqrt((MX-to_fit_masses[:,0])**2 + (MY-to_fit_masses[:,1])**2)
-  dist_grid = np.sqrt((argx(MX) - argx(to_fit_masses[:,0]))**2 + (argy(MY) - argy(to_fit_masses[:,1]))**2)
+  dist_grid = np.sqrt((argx - argx(to_fit_masses[:,0]))**2 + (argy(MY) - argy(to_fit_masses[:,1]))**2)
   idxs = list(np.argsort(dist_grid)[::-1])
   
   #only keep those which are not on edge of grid
@@ -110,6 +108,7 @@ def doSkipClosest(MX, MY, to_fit_masses, norms_nominal):
   n = not_idx(norms_nominal, idx)
 
   skipped_mass = to_fit_masses[idx]
+  skipped_mass = []
 
   return m, n, skipped_mass
 
@@ -134,13 +133,13 @@ def deriveModels(original_df, proc_dict, optim_results, original_outdir, make_pl
 
   all_masses = [common.get_MX_MY(entry["sig_proc"]) for entry in optim_results]
   nominal_masses = np.array([common.get_MX_MY(entry["sig_proc"]) for entry in optim_results if entry["sig_proc"] in proc_dict.keys()])
-
   nominal_mxs = np.sort(np.array(list(set(nominal_masses[:,0]))))
   nominal_mys = np.sort(np.array(list(set(nominal_masses[:,1]))))
   gridx = np.arange(len(nominal_mxs))
   gridy = np.arange(len(nominal_mys))
   #argx and argy tell us where we are in grid coordinates as function of mx and my
   argx = interp1d(nominal_mxs, gridx, kind='linear')
+#  argx = nominal_mxs[0]
   argy = lambda x: interp1d(nominal_mys, gridy, kind='linear')(x) if len(nominal_mys)>1 else 0
 
   nSR = len(optim_results[0]["category_boundaries"]) - 1
@@ -156,20 +155,23 @@ def deriveModels(original_df, proc_dict, optim_results, original_outdir, make_pl
       print(MX, MY)
       print()
 
-      closest_mx = nominal_mxs[gridx[np.argmin(abs(gridx-argx(MX)))]]
-      closest_my = nominal_mys[gridy[np.argmin(abs(gridy-argy(MY)))]]
+      #closest_mx = nominal_mxs[gridx[np.argmin(abs(gridx-argx(MX)))]]
+      #closest_my = nominal_mys[gridy[np.argmin(abs(gridy-argy(MY)))]]
+      closest_mx=MX
+      closest_my=MY
 
       is_nominal_mass = (MX==closest_mx) and (MY==closest_my)
       if is_nominal_mass: r = 1
       else:               r = 3
 
-      to_fit_mxs = nominal_mxs[gridx[(gridx>=argx(MX)-r)&(gridx<=argx(MX)+r)]] #closest mx within +-r points
-      to_fit_mys = nominal_mys[gridy[(gridy>=argy(MY)-r)&(gridy<=argy(MY)+r)]] #closest mx within +-r points
+      #to_fit_mxs = nominal_mxs[gridx[(gridx>=argx-r)&(gridx<=argx+r)]] #closest mx within +-r points
+      to_fit_mxs = nominal_mxs
+      #to_fit_mys = nominal_mys[gridy[(gridy>=argy(MY)-r)&(gridy<=argy(MY)+r)]] #closest mx within +-r points
+      to_fit_mys = nominal_mys
 
       to_fit_masses = [[mx, my] for mx in to_fit_mxs for my in to_fit_mys if (mx, my) in all_masses] #convenient to leave as list for tagSignals
       df_tagged = tagSignals(df_year, entry, proc_dict, to_fit_masses)
-      to_fit_masses = np.array(to_fit_masses)
-
+      print("closest_at_beginning:mx=%f, my=%f", closest_mx, closest_my)
       #for interpolation at combine level in MH (MY)
       if do_same_score_interp: 
         to_fit_mxs_same_score = [closest_mx]
@@ -180,16 +182,30 @@ def deriveModels(original_df, proc_dict, optim_results, original_outdir, make_pl
 
       print("Closest MX, Closest MY")
       for SR in range(len(entry["category_boundaries"])-1):
+        print(len(entry["category_boundaries"]))
+        print("closest_at_second:mx=%f, my=%f", closest_mx, closest_my)
         print(SR, flush=True)
         df = df_tagged[df_tagged.SR==SR]
         if do_same_score_interp: df_same_score = df_tagged_same_score[df_tagged_same_score.SR==SR]
 
         outdir = os.path.join(original_outdir, str(year), str(SR), "%d_%d"%(MX,MY))
-        
+        print("closest_at_third:mx=%f, my=%f", closest_mx, closest_my) 
         models[str(year)][str(SR)]["%d_%d"%(MX, MY)] = {}
 
         #set tiny norms to zero
+        #norm_closest = df.loc[(df.process_id==entry["process_id"]), "weight"].sum()/common.lumi_table[year]
         norm_closest = df.loc[(df.MX==closest_mx)&(df.MY==closest_my), "weight"].sum()/common.lumi_table[year]
+        print("closest_at_fourth:mx=%f, my=%f", closest_mx, closest_my)
+        print(df.loc[(df.MX==closest_mx)&(df.MY==closest_my), "weight"].sum())
+        print(norm_closest)
+
+        to_fit_ids = [i for i in df.process_id.unique()]
+        print(to_fit_ids)
+        df = df[df.process_id.isin(to_fit_ids)]
+
+        print(10000)
+        print(SR)
+        print(norm_closest)
         if norm_closest < 0.001:
           popt = np.array([1, 0.0, 2, 1.2, 10, 1.2, 10]) #doesn't matter but give sensible numbers anyway
           #models[str(year)][str(SR)]["%d_%d"%(MX, MY)] = {"%d_%d"%tuple(to_fit_masses[i]):{"norm": 0.0, "norm_err": 0.0} for i in range(len(to_fit_masses))}
@@ -198,6 +214,10 @@ def deriveModels(original_df, proc_dict, optim_results, original_outdir, make_pl
             models[str(year)][str(SR)]["%d_%d"%(MX, MY)]["same_score"] = {"grad_norm_pos": 0.0, "grad_norm_neg": 0.0, "grad_dm": 0.0, "grad_sigma": 0.0}
           continue
 
+        print(1111)
+        print(SR)
+        print(is_nominal_mass)
+        print(MX, closest_mx, MY, closest_my)
         #handle normalisation
         if is_nominal_mass:
           norm = df.loc[(df.MX==MX)&(df.MY==MY), "weight"].sum()/common.lumi_table[year]
@@ -210,8 +230,9 @@ def deriveModels(original_df, proc_dict, optim_results, original_outdir, make_pl
           models[str(year)][str(SR)]["%d_%d"%(MX, MY)] = {"%d_%d"%tuple(to_fit_masses[i]):{"norm": float(norms_nominal[i]), "norm_err": float(norms_nominal_err[i])} for i in range(len(to_fit_masses))}
 
           norm_cubic, norm_linear, skipped_mass = doInterpolation(MX, MY, to_fit_masses, norms_nominal)
-          norm_cubic_skip, norm_linear_skip, skipped_mass = doInterpolation(MX, MY, to_fit_masses, norms_nominal, skip_closest=True)
-          
+          #norm_cubic_skip, norm_linear_skip, skipped_mass = doInterpolation(MX, MY, to_fit_masses, norms_nominal, skip_closest=True)
+          norm_cubic_skip, norm_linear_skip, skipped_mass = doInterpolation(MX, MY, to_fit_masses, norms_nominal, skip_closest=False)
+
           norm_cubic_systematic = 1 + abs((norm_cubic-norm_cubic_skip)/norm_cubic)
           norm_linear_systematic = 1 + abs((norm_linear-norm_linear_skip)/norm_linear)
                     
@@ -223,6 +244,8 @@ def deriveModels(original_df, proc_dict, optim_results, original_outdir, make_pl
         
         models[str(year)][str(SR)]["%d_%d"%(MX, MY)]["this mass"]["closest_mass"] = "%d_%d"%(closest_mx, closest_my)
 
+        print(2222)
+        print(SR)
         #handle shape
         if is_nominal_mass:
           popt, perr = fitSignalModel(df, MX, outdir, MY, fit_range_my, make_plots)
@@ -230,7 +253,7 @@ def deriveModels(original_df, proc_dict, optim_results, original_outdir, make_pl
           models[str(year)][str(SR)]["%d_%d"%(MX, MY)]["this mass"]["parameters_err"] = list(perr)
         else:
           #only need the +-1 points since using linear interpolation for shape
-          to_fit_mxs_shape = nominal_mxs[gridx[(gridx>=argx(MX)-1)&(gridx<=argx(MX)+1)]] #closest mx within +-r points
+          to_fit_mxs_shape = nominal_mxs[gridx[(gridx>=argx-1)&(gridx<=argx+1)]] #closest mx within +-r points
           to_fit_mys_shape = nominal_mys[gridy[(gridy>=argy(MY)-1)&(gridy<=argy(MY)+1)]] #closest mx within +-r points
           to_fit_masses_shape = np.array([[mx, my] for mx in to_fit_mxs_shape for my in to_fit_mys_shape if (mx, my) in all_masses])
 
@@ -326,8 +349,9 @@ def checkInterpolation(original_df, proc_dict, optim_results, original_outdir, m
 
 def tagSignals(df, entry, proc_dict, to_fit_masses, use_same_score=False):
   pd.options.mode.chained_assignment = None
-
-  to_fit_ids = [i for i in df.process_id.unique() if list(df[df.process_id==i].iloc[0][["MX", "MY"]]) in to_fit_masses]
+#  to_fit_ids = [i for i in df.process_id.unique() if list(df[df.process_id==i].iloc[0][["MX", "MY"]]) in to_fit_masses]
+  to_fit_ids = [i for i in df.process_id.unique()]
+  print(to_fit_ids)
   df = df[df.process_id.isin(to_fit_ids)]
   
   df.loc[:, "SR"] = -1
@@ -342,12 +366,24 @@ def tagSignals(df, entry, proc_dict, to_fit_masses, use_same_score=False):
 
         if proc in proc_dict.keys():
           for i in range(len(boundaries)-1):
-            selection = (df[score] <= boundaries[i]) & (df[score] > boundaries[i+1]) & (df.process_id==proc_dict[proc])
+            if (boundaries[i]==boundaries[i-1]):
+              selection = (df[score] < boundaries[i]) & (df[score] > boundaries[i+1]) & (df.process_id==proc_dict[proc])
+            else:
+              selection = (df[score] <= boundaries[i]) & (df[score] > boundaries[i+1]) & (df.process_id==proc_dict[proc])
+            if (boundaries[i]==boundaries[i+1]):
+              selection = (df[score]==boundaries[i]) & (df.process_id==proc_dict[proc])
+#            selection = (df[score] <= boundaries[i]) & (df[score] > boundaries[i+1]) & (df.process_id==proc_dict[proc])
             df.loc[selection, "SR"] = i
   else:
     score = entry["score"]
     for i in range(len(boundaries)-1):
-      selection = (df[score] <= boundaries[i]) & (df[score] > boundaries[i+1])
+      if (boundaries[i]==boundaries[i-1]):
+        selection = (df[score] < boundaries[i]) & (df[score] > boundaries[i+1]) & (df.process_id==proc_dict[proc])
+      else:
+        selection = (df[score] <= boundaries[i]) & (df[score] > boundaries[i+1]) & (df.process_id==proc_dict[proc])
+      if (boundaries[i]==boundaries[i+1]):
+        selection = (df[score]==boundaries[i]) & (df.process_id==proc_dict[proc])
+#      selection = (df[score] <= boundaries[i]) & (df[score] > boundaries[i+1])
       df.loc[selection, "SR"] = i
 
   pd.options.mode.chained_assignment = "warn"
@@ -362,7 +398,7 @@ def main(args):
   df = df[df.y==1]
   with open(args.summary_input) as f:
     proc_dict = json.load(f)['sample_id_map']
-  common.add_MX_MY(df, proc_dict)
+#  common.add_MX_MY(df, proc_dict)
    
   with open(args.optim_results) as f:
      optim_results = json.load(f)

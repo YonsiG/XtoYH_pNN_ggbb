@@ -48,7 +48,13 @@ def tagSignals(df, entry):
     return df.iloc[0:0]
 
   for i in range(len(boundaries)-1):
-    selection = (df[score] <= boundaries[i]) & (df[score] > boundaries[i+1])
+    if (boundaries[i]==boundaries[i-1]):
+        selection = (df[score] < boundaries[i]) & (df[score] > boundaries[i+1])
+    else:
+        selection = (df[score] <= boundaries[i]) & (df[score] > boundaries[i+1])
+    if (boundaries[i]==boundaries[i+1]):
+        selection = (df[score]==boundaries[i])
+    #selection = (df[score] <= boundaries[i]) & (df[score] > boundaries[i+1])
     df.loc[selection, "SR"] = i
 
   pd.options.mode.chained_assignment = "warn"
